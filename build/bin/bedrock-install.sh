@@ -7,12 +7,6 @@ cd /srv/bedrock
 # Run composer install
 composer install
 
-# Wait for database to be ready
-until nc -z -v -w30 mariadb 3306
-do
-  echo "Waiting for database connection..."
-  sleep 5
-done
 
 # Initialize WordPress if it's not already installed
 wp core is-installed || wp core install --url=$WP_HOME --title="Bedrock Site" --admin_user=admin --admin_password=admin_password --admin_email=admin@example.com
