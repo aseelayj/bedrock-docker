@@ -13,6 +13,11 @@ services:
       - "3306:3306"
     volumes:
       - data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "wpuser", "-pwppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   bedrock:
     build:
@@ -21,7 +26,8 @@ services:
     container_name: bedrock-container
     restart: always
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     ports:
       - '9857:80'
     environment:
