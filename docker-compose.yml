@@ -23,7 +23,7 @@ services:
     depends_on:
       - mariadb
     ports:
-      - "80:80"
+      - "2543:80"
     environment:
       DB_NAME: 'wordpress'
       DB_USER: 'wpuser'
