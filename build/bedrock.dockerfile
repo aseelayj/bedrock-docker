@@ -1,7 +1,6 @@
 FROM php:8.0-fpm as base
 LABEL name=bedrock
 LABEL intermediate=true
-
 # Install essential packages
 RUN apt-get update \
   && apt-get install -y \
@@ -21,7 +20,6 @@ RUN apt-get update \
 FROM base as php
 LABEL name=bedrock
 LABEL intermediate=true
-
 # Install php extensions and related packages
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && sync \
@@ -52,7 +50,6 @@ RUN chmod +x /usr/local/bin/install-php-extensions && sync \
 
 FROM php as bedrock
 LABEL name=bedrock
-
 # Install nginx & supervisor
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get update \
@@ -94,10 +91,6 @@ RUN rm -rf /srv/bedrock/*
 RUN git clone https://github.com/roots/bedrock.git . \
     && rm -rf .git
 
-# If you need a specific version of Bedrock, use:
-# RUN git clone --branch <tag_name> https://github.com/roots/bedrock.git . \
-#     && rm -rf .git
-
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
@@ -111,9 +104,6 @@ RUN chmod +x /srv/bedrock-install.sh \
 
 # Set permissions
 RUN chown -R bedrockuser:bedrockuser /srv/bedrock
-
-# Switch to the non-root user
-USER bedrockuser
 
 # Final command
 CMD ["/srv/bedrock-install.sh"]
