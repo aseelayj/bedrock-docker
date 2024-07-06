@@ -1,22 +1,28 @@
 #!/bin/bash
-
 set -e
 
+# Change to the Bedrock directory
 cd /srv/bedrock
 
+# Run composer install
 composer install
 
-wp core install --url=$WP_HOME \
-  --title=bedrock \
-  --admin_user=dev \
-  --admin_email=admin@example.com \
-  --admin_password=dev
+# Wait for database to be ready
+until nc -z -v -w30 mariadb 3306
+do
+  echo "Waiting for database connection..."
+  sleep 5
+done
 
-wp package install aaemnnosttv/wp-cli-login-command \
-  || echo 'wp-cli-login-command is already installed'
+# Initialize WordPress if it's not already installed
+wp core is-installed || wp core install --url=$WP_HOME --title="Bedrock Site" --admin_user=admin --admin_password=admin_password --admin_email=admin@example.com
 
+# Install and activate the login command
+wp package install aaemnnosttv/wp-cli-login-command || echo 'wp-cli-login-command is already installed'
 wp login install --activate --yes --skip-plugins --skip-themes
 
+# Create a login link
 wp login as 1
 
-/usr/bin/supervisord -c /etc/supervisord.conf > /dev/null
+# Start supervisord
+exec /usr/bin/supervisord -n -c /etc/supervisord.conf
