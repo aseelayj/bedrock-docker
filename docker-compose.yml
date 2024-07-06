@@ -16,7 +16,7 @@ services:
   bedrock:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./build/bedrock.dockerfile
     container_name: bedrock-${id4884}-1334247545$2
     restart: always
     depends_on:
