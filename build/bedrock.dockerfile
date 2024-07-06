@@ -75,10 +75,10 @@ COPY ./build/supervisor/supervisord.conf /etc/supervisord.conf
 # WordPress CLI
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/bin/wp
+  && mv wp-cli.phar /usr/local/bin/wp
 COPY ./build/bin/wp.sh /srv/wp.sh
 RUN chmod +x /srv/wp.sh \
-  && mv /srv/wp.sh /usr/bin/wp
+  && mv /srv/wp.sh /usr/local/bin/_wp
 
 # Installation helper
 COPY ./build/bin/bedrock-install.sh /srv/bedrock-install.sh
