@@ -23,7 +23,7 @@ services:
       - '9857:80'
     environment:
       DB_NAME: 'wordpress'
-      DB_USER: 'testor'
+      DB_USER: 'root'
       DB_PASSWORD: 'rootpassword'
       DB_HOST: mariadb
       WP_ENV: 'development'
