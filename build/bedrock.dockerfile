@@ -28,7 +28,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && sync \
   && install-php-extensions \
     @composer \
     exif \
-    gd \ 
+    gd \
     memcached \
     mysqli \
     pcntl \
@@ -54,7 +54,7 @@ FROM php as bedrock
 LABEL name=bedrock
 
 # Install nginx & supervisor
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get update \
   && apt-get install -y \
     nginx \
@@ -75,7 +75,7 @@ COPY ./build/supervisor/supervisord.conf /etc/supervisord.conf
 # WordPress CLI
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/bin/_wp;
+  && mv wp-cli.phar /usr/bin/wp
 COPY ./build/bin/wp.sh /srv/wp.sh
 RUN chmod +x /srv/wp.sh \
   && mv /srv/wp.sh /usr/bin/wp
@@ -88,6 +88,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
+
+# Ensure the directory is empty before cloning
+RUN rm -rf /var/www/html/*
 
 # Clone Bedrock
 RUN git clone https://github.com/roots/bedrock.git . \
@@ -105,9 +108,6 @@ COPY . .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
-
-
-
 
 WORKDIR /srv/bedrock
 CMD ["/srv/bedrock-install.sh"]
