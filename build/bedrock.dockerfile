@@ -104,6 +104,11 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy your custom application files (if any)
 COPY . .
 
+# Copy the installation script and set permissions
+COPY bedrock-install.sh /srv/bedrock-install.sh
+RUN chmod +x /srv/bedrock-install.sh \
+    && chown bedrockuser:bedrockuser /srv/bedrock-install.sh
+
 # Set permissions
 RUN chown -R bedrockuser:bedrockuser /srv/bedrock
 
