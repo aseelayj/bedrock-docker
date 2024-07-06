@@ -16,16 +16,24 @@ services:
   bedrock:
     build:
       context: .
-      dockerfile: ./build/bedrock.dockerfile
-    container_name: bedrock
+      dockerfile: Dockerfile
+    container_name: bedrock-${id4884}-1334247545$2
     restart: always
-    links:
+    depends_on:
       - mariadb
     ports:
-      - 80:80
-    env_file: .env
+      - '80:80'
+    environment:
+      DB_NAME: '${DB_NAME}'
+      DB_USER: '${DB_USER}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      DB_HOST: mariadb
+      WP_ENV: '${WP_ENV}'
+      WP_HOME: '${WP_HOME}'
+      WP_SITEURL: '${WP_SITEURL}'
     volumes:
-      - ./bedrock:/srv/bedrock
+      - bedrock_uploads:/var/www/html/web/app/uploads
 
 volumes:
-  data:
+  mariadb_data:
+  bedrock_uploads:
