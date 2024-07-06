@@ -76,13 +76,11 @@ COPY ./build/supervisor/supervisord.conf /etc/supervisord.conf
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
   && mv wp-cli.phar /usr/local/bin/wp
-COPY ./build/bin/wp.sh /srv/wp.sh
-RUN chmod +x /srv/wp.sh \
-  && mv /srv/wp.sh /usr/local/bin/_wp
 
-# Installation helper
-COPY ./build/bin/bedrock-install.sh /srv/bedrock-install.sh
-RUN chmod +x /srv/bedrock-install.sh
+# Create a non-root user and give it ownership of the bedrock directory
+RUN useradd -ms /bin/bash bedrockuser \
+  && mkdir -p /srv/bedrock \
+  && chown -R bedrockuser:bedrockuser /srv/bedrock
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -107,7 +105,10 @@ RUN composer install --no-dev --optimize-autoloader
 COPY . .
 
 # Set permissions
-RUN chown -R www-data:www-data /srv/bedrock
+RUN chown -R bedrockuser:bedrockuser /srv/bedrock
+
+# Switch to the non-root user
+USER bedrockuser
 
 # Final command
 CMD ["/srv/bedrock-install.sh"]
