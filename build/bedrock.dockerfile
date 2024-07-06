@@ -84,5 +84,30 @@ RUN chmod +x /srv/wp.sh \
 COPY ./build/bin/bedrock-install.sh /srv/bedrock-install.sh
 RUN chmod +x /srv/bedrock-install.sh
 
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Clone Bedrock
+RUN git clone https://github.com/roots/bedrock.git . \
+    && rm -rf .git
+
+# If you need a specific version of Bedrock, use:
+# RUN git clone --branch <tag_name> https://github.com/roots/bedrock.git . \
+#     && rm -rf .git
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Copy your custom application files (if any)
+COPY . .
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
+
+
+
+
 WORKDIR /srv/bedrock
 CMD ["/srv/bedrock-install.sh"]
