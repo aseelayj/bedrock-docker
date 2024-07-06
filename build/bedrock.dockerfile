@@ -87,10 +87,10 @@ RUN chmod +x /srv/bedrock-install.sh
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /srv/bedrock
 
 # Ensure the directory is empty before cloning
-RUN rm -rf /var/www/html/*
+RUN rm -rf /srv/bedrock/*
 
 # Clone Bedrock
 RUN git clone https://github.com/roots/bedrock.git . \
@@ -107,7 +107,7 @@ RUN composer install --no-dev --optimize-autoloader
 COPY . .
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /srv/bedrock
 
-WORKDIR /srv/bedrock
+# Final command
 CMD ["/srv/bedrock-install.sh"]
