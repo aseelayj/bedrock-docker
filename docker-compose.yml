@@ -10,7 +10,7 @@ services:
       MARIADB_USER: wpuser
       MARIADB_PASSWORD: wppassword
     ports:
-      - "3306:3306"
+      - "6854:3306"
     volumes:
       - data:/var/lib/mysql
 
