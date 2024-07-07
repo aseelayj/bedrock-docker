@@ -18,4 +18,4 @@ su bedrockuser -c 'wp login install --activate --yes --skip-plugins --skip-theme
 su bedrockuser -c 'wp login as 1'
 
 # Start supervisord
-exec /usr/bin/supervisord -n -c /etc/supervisord.conf
+#exec /usr/bin/supervisord -n -c /etc/supervisord.conf
