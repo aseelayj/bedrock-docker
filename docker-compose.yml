@@ -6,8 +6,6 @@ services:
       dockerfile: ./build/bedrock.dockerfile
     container_name: bedrock-container
     restart: always
-    depends_on:
-      - mariadb
     ports:
       - '9857:80'
     environment:
